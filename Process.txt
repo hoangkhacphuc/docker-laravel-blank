@@ -1,0 +1,16 @@
+PHP:8.1.27-fpm
+    - PORT: 8000
+    - Cấu hình: mysqli, pdo_mysql
+    - Đặt thư mục làm việc lại: /usr/www/html
+Apache httpd:latest
+    - PORT: 80, 443
+    - Cấu hình tệp httpd.conf
+        - Cài: mod_proxy, mod_proxy_fcgi
+        - Thư mục làm việc /usr/www/html
+        - File mặc định: index.php
+        - Phphandler: AddHandler "proxy:fcgi://php-product:8000"
+Mysql:
+    - PORT: 3306
+    - Config: /etc/mysql/my.cnf - default-authentication-plugin=mysql_native_password
+    - database: /var/lib/mysql -> /database
+    

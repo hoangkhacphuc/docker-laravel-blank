@@ -1,10 +1,19 @@
-# FROM <tên image>:<version> # Chọn image để build image
+FROM php:8.3.3RC1-apache
+RUN apt-get update && apt-get -y install apache2
 
-# RUN <câu lệnh> # Chạy lệnh khi build image
+COPY . /var/www/html
 
-# WORKDIR /<đường dẫn trong image> # Set thư mục làm việc mặc định
-# EXPOSE <port> # Mở port
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_RUN_DIR /var/run/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
 
-# ADD ./<tên file> /<đường dẫn trong image>
-# ENTRYPOINT [ "httpd" ] # Chạy tiến trình nào khi khởi động container
-# CMD [ "-D", "FOREGROUND" ] # Tham số cho tiến trình khi khởi động container
+RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stderr /var/log/apache2/error.log
+RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
+WORKDIR /var/www/html
+RUN chmod -R 777 storage
+
+EXPOSE 80
