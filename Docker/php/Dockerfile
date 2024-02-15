@@ -1,15 +1,21 @@
-FROM php:8.3.3RC1-apache
-RUN apt-get update && apt-get -y install apache2
+FROM php:8.2-fpm-alpine
 
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
-RUN apt-get update && \
-  apt-get -y install libicu-dev libonig-dev libzip-dev unzip locales && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/* && \
-  locale-gen en_US.UTF-8 && \
-  localedef -f UTF-8 -i en_US en_US.UTF-8 && \
-  a2enmod rewrite && \
-  docker-php-ext-install intl pdo_mysql zip bcmath && \
-  composer config -g process-timeout 3600 && \
-  composer config -g repos.packagist composer https://packagist.org
+RUN apk update && apk add \
+    curl \
+    libpng-dev \
+    libxml2-dev \
+    zip \
+    unzip
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /var/www/html
+USER root
+RUN chmod 777 -R /var/www/html
+
+EXPOSE 9000
+CMD ["php-fpm"]
