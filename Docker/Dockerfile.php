@@ -7,7 +7,8 @@ RUN apk update && apk add \
     libpng-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    supervisor
 
 RUN docker-php-ext-install pdo pdo_mysql
 
@@ -17,5 +18,5 @@ WORKDIR /var/www/html
 USER root
 RUN chmod 777 -R /var/www/html
 
-EXPOSE 9000
+EXPOSE 9000 80 443 9001
 CMD ["php-fpm"]

@@ -1,11 +1,10 @@
 services:
     php:
         build:
-            context: .
-            dockerfile: ./Docker/php/Dockerfile
+            dockerfile: ./docker/Dockerfile.php
         container_name: php
         volumes:
-            - .:/var/www/html
+            - ./server:/var/www/html
         networks:
             - laravel
         environment:
@@ -22,20 +21,22 @@ services:
         ports:
             - 8000:80
         volumes: 
-            - .:/var/www/html
-            - ./Docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+            - /server:/var/www/html
+            - /nginx/server.conf:/etc/nginx/conf.d/default.conf
+            # - ./Docker/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
         depends_on: 
             - php
             - mysql
         networks: 
             - laravel
     mysql:
-        image: mysql:8.0
+        build: 
+            dockerfile: ./docker/Dockerfile.mysql
         container_name: mysql
         restart: unless-stopped
         tty: true
         volumes: 
-            - ./Docker/mysql/data:/var/lib/mysql
+            - /docker/mysql:/var/lib/mysql
         environment: 
             MYSQL_DATABASE: demo_laravel
             MYSQL_ROOT_PASSWORD: secret
