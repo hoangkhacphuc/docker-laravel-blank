@@ -11,6 +11,8 @@ RUN apk update && apk add \
     supervisor
 
 RUN docker-php-ext-install pdo pdo_mysql
+RUN pecl install swoole
+RUN pecl install openswoole
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

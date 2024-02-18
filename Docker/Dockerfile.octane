@@ -1,0 +1,11 @@
+FROM laravel/sail:8.43.0
+
+WORKDIR /var/www/html
+
+COPY . .
+
+EXPOSE 8080
+
+RUN composer install
+
+RUN docker-php-ext-install redis
