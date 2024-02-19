@@ -5,7 +5,7 @@ services:
         container_name: php
         volumes:
             - ./server:/var/www/html
-            - ./.env.server:/var/www/html
+            - ./.env.server:/var/www/html//.env
         networks:
             - laravel
         environment:
