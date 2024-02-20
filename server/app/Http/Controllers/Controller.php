@@ -14,6 +14,15 @@ class Controller extends BaseController
 
     public function index()
     {
-        return view('welcome');
-    }
+        $log = "";
+        try {
+            DB::connection()->getPdo();
+            $log =  "Connected successfully to database " . DB::connection()->getDatabaseName();
+        } catch (\Exception $e) {
+            $log = "Could not connect to the database.";
+        }
+        return view('welcome', [
+            'log' => $log
+        ]);
+    }   
 }
